@@ -1,9 +1,4 @@
-#include <array>
-#include <codecvt>
-#include <iostream>
-#include <type_traits>
-
-#include "fixed.hpp"
+#include "simulation.hpp"
 
 #define FIXED(N, K) Fixed<N, K>
 #define FAST_FIXED(N, K) Fast_Fixed<N, K>
@@ -39,9 +34,7 @@
 //
 //
 
-int main(int argc, char* argv[]) {
-#ifdef TYPES
-  TYPES res();
-#endif
+int main(int argc, char *argv[]) {
+  Simulation<Fixed<32, 16>, Fast_Fixed<32, 16>, Fast_Fixed<14, 4>> sim;
   return 0;
 }

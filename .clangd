@@ -3,3 +3,5 @@ CompileFlags:
   Add:
     - "-std=c++23"
     - "-Wall"
+Diagnostics:
+  Suppress: cert-msc51-cpp
