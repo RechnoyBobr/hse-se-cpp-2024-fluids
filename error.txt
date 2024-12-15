@@ -1,0 +1,520 @@
+|| [ 50%] Building CXX object CMakeFiles/Fluids.dir/main.cpp.o
+|| In file included from /home/ilya/hse-se-cpp-2024-fluids/main.cpp:1:
+|| /home/ilya/hse-se-cpp-2024-fluids/simulation.hpp: In instantiation of 'Simulation<p_type, v_type, v_flow>::Simulation() [with p_type = Fixed<32, 16>; v_type = Fixed<32, 16>; v_flow = Fixed<32, 16>]':
+hse-se-cpp-2024-fluids/main.cpp|38 col 59| required from here
+||    38 |   Simulation<Fixed<32, 16>, Fixed<32, 16>, Fixed<32, 16>> sim;
+||       |                                                           ^~~
+hse-se-cpp-2024-fluids/simulation.hpp|316 col 23| warning: comparison of integer expressions of different signedness: 'int' and 'const size_t' {aka 'const long unsigned int'} [-Wsign-compare]
+||   316 |     for (int i = 0; i < N; i++) {
+||       |                     ~~^~~
+hse-se-cpp-2024-fluids/simulation.hpp|317 col 25| warning: comparison of integer expressions of different signedness: 'int' and 'const size_t' {aka 'const long unsigned int'} [-Wsign-compare]
+||   317 |       for (int j = 0; j < M; j++) {
+||       |                       ~~^~~
+|| /home/ilya/hse-se-cpp-2024-fluids/simulation.hpp: In instantiation of 'void Simulation<p_type, v_type, v_flow>::run() [with p_type = Fixed<32, 16>; v_type = Fixed<32, 16>; v_flow = Fixed<32, 16>]':
+hse-se-cpp-2024-fluids/main.cpp|39 col 10| required from here
+||    39 |   sim.run();
+||       |   ~~~~~~~^~
+hse-se-cpp-2024-fluids/simulation.hpp|363 col 32| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   363 |                 contr -= force / rho[(int)field[nx][ny]];
+||       |                          ~~~~~~^~~~~~
+|| In file included from /home/ilya/hse-se-cpp-2024-fluids/simulation.hpp:7:
+hse-se-cpp-2024-fluids/fixed.hpp|313 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator-=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   313 |   template <int N2, int K2> Fixed<N, K> &operator-=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|366 col 30| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   366 |               force -= contr * rho[(int)field[nx][ny]];
+||       |                        ~~~~~~^~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|313 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator-=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   313 |   template <int N2, int K2> Fixed<N, K> &operator-=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|369 col 26| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   369 |               p[x][y] -= p_type(force / dirs[x][y]);
+||       |                          ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|313 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator-=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   313 |   template <int N2, int K2> Fixed<N, K> &operator-=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|370 col 32| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   370 |               total_delta_p -= p_type(force / dirs[x][y]);
+||       |                                ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|313 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator-=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   313 |   template <int N2, int K2> Fixed<N, K> &operator-=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|386 col 76| error: 'N' is not a member of 'Fixed<32, 16>'
+||   386 |                   VectorField<v_flow, v_flow::N, v_flow::K>::propagate_flow(
+||       |                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
+||   387 |                       x, y, 1);
+||       |                       ~~~~~~~~                                              
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| error: no match for 'operator>' (operand types are 'Fixed<32, 16>' and 'int')
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/regex:68,
+/usr/include/c++/14.2.1/bits/regex.h|1288 col 5| note: candidate: 'template<class _Bi_iter, class _Ch_traits, class _Alloc> auto std::__cxx11::operator<=>(const sub_match<_BiIter>&, __sub_match_string<_Bi_iter, _Ch_traits, _Ch_alloc>&)' (reversed)
+||  1288 |     operator<=>(const sub_match<_Bi_iter>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/regex.h|1288 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__cxx11::sub_match<_BiIter>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/regex.h|1456 col 5| note: candidate: 'template<class _Bi_iter> auto std::__cxx11::operator<=>(const sub_match<_BiIter>&, const typename std::iterator_traits<_Iter>::value_type*)' (reversed)
+||  1456 |     operator<=>(const sub_match<_Bi_iter>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/regex.h|1456 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__cxx11::sub_match<_BiIter>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/regex.h|1629 col 5| note: candidate: 'template<class _Bi_iter> auto std::__cxx11::operator<=>(const sub_match<_BiIter>&, const typename std::iterator_traits<_Iter>::value_type&)' (reversed)
+||  1629 |     operator<=>(const sub_match<_Bi_iter>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/regex.h|1629 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__cxx11::sub_match<_BiIter>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/stl_algobase.h:64,
+/usr/include/c++/14.2.1/bits/stl_pair.h|1023 col 5| note: candidate: 'template<class _T1, class _T2, class _U1, class _U2> constexpr std::common_comparison_category_t<decltype (std::__detail::__synth3way(declval<_T1&>(), declval<_U1&>())), decltype (std::__detail::__synth3way(declval<_T2&>(), declval<_U2&>()))> std::operator<=>(const pair<_T1, _T2>&, const pair<_U1, _U2>&)' (reversed)
+||  1023 |     operator<=>(const pair<_T1, _T2>& __x, const pair<_U1, _U2>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_pair.h|1023 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::pair<_T1, _T2>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/stl_algobase.h:67:
+/usr/include/c++/14.2.1/bits/stl_iterator.h|576 col 5| note: candidate: 'template<class _IteratorL, class _IteratorR>  requires  three_way_comparable_with<_IteratorR, _IteratorL, std::partial_ordering> constexpr std::compare_three_way_result_t<_IteratorL, _IteratorR> std::operator<=>(const reverse_iterator<_IteratorL>&, const reverse_iterator<_IteratorR>&)' (reversed)
+||   576 |     operator<=>(const reverse_iterator<_IteratorL>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|576 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::reverse_iterator<_IteratorL>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1679 col 5| note: candidate: 'template<class _IteratorL, class _IteratorR>  requires  three_way_comparable_with<_IteratorR, _IteratorL, std::partial_ordering> constexpr std::compare_three_way_result_t<_IteratorL, _IteratorR> std::operator<=>(const move_iterator<_IteratorL>&, const move_iterator<_IteratorR>&)' (reversed)
+||  1679 |     operator<=>(const move_iterator<_IteratorL>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1679 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::move_iterator<_IteratorL>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/ranges_algo.h:36,
+/usr/include/c++/14.2.1/optional|1283 col 5| note: candidate: 'template<class _Tp, class _Up>  requires  three_way_comparable_with<_Up, _Tp, std::partial_ordering> constexpr std::compare_three_way_result_t<_IteratorL, _IteratorR> std::operator<=>(const optional<_Tp>&, const optional<_Up>&)' (reversed)
+||  1283 |     operator<=>(const optional<_Tp>& __x, const optional<_Up>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1283 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::optional<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/optional|1298 col 5| note: candidate: 'template<class _Tp> constexpr std::strong_ordering std::operator<=>(const optional<_Tp>&, nullopt_t)' (reversed)
+||  1298 |     operator<=>(const optional<_Tp>& __x, nullopt_t) noexcept
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1298 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::optional<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/optional|1435 col 5| note: candidate: 'template<class _Tp, class _Up>  requires !(__is_optional_v<_Up>) && (three_way_comparable_with<_Up, _Tp, std::partial_ordering>) constexpr std::compare_three_way_result_t<_IteratorL, _IteratorR> std::operator<=>(const optional<_Tp>&, const _Up&)' (reversed)
+||  1435 |     operator<=>(const optional<_Tp>& __x, const _Up& __v)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1435 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::optional<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/basic_string.h:47,
+/usr/include/c++/14.2.1/string_view|617 col 5| note: candidate: 'template<class _CharT, class _Traits> constexpr decltype (__char_traits_cmp_cat<_Traits>(0)) std::operator<=>(basic_string_view<_CharT, _Traits>, __type_identity_t<basic_string_view<_CharT, _Traits> >)' (reversed)
+||   617 |     operator<=>(basic_string_view<_CharT, _Traits> __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/string_view|617 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'std::basic_string_view<_CharT, _Traits>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/basic_string.h|3805 col 5| note: candidate: 'template<class _CharT, class _Traits, class _Alloc> constexpr decltype (__char_traits_cmp_cat<_Traits>(0)) std::operator<=>(const __cxx11::basic_string<_CharT, _Traits, _Allocator>&, const _CharT*)' (reversed)
+||  3805 |     operator<=>(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/basic_string.h|3805 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/uses_allocator_args.h:39,
+/usr/include/c++/14.2.1/tuple|2589 col 5| note: candidate: 'template<class ... _Tps, class ... _Ups> constexpr std::common_comparison_category_t<decltype (std::__detail::__synth3way(declval<_Tps&>(), declval<_Ups&>()))...> std::operator<=>(const tuple<_Ts ...>&, const tuple<_Elements ...>&)' (reversed)
+||  2589 |     operator<=>(const tuple<_Tps...>& __t, const tuple<_Ups...>& __u)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/tuple|2589 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::tuple<_Ts ...>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/memory:78,
+/usr/include/c++/14.2.1/bits/unique_ptr.h|996 col 5| note: candidate: 'template<class _Tp, class _Dp, class _Up, class _Ep>  requires  three_way_comparable_with<typename std::unique_ptr<_Tp, _Dp>::pointer, typename std::unique_ptr<_Up, _Ep>::pointer, std::partial_ordering> constexpr std::compare_three_way_result_t<typename std::unique_ptr<_Tp, _Dp>::pointer, typename std::unique_ptr<_Up, _Ep>::pointer> std::operator<=>(const unique_ptr<_Tp, _Dp>&, const unique_ptr<_Up, _Ep>&)' (reversed)
+||   996 |     operator<=>(const unique_ptr<_Tp, _Dp>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|996 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::unique_ptr<_Tp, _Dp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|1005 col 5| note: candidate: 'template<class _Tp, class _Dp>  requires  three_way_comparable<typename std::unique_ptr<_Tp, _Dp>::pointer, std::partial_ordering> constexpr std::compare_three_way_result_t<typename std::unique_ptr<_Tp, _Dp>::pointer> std::operator<=>(const unique_ptr<_Tp, _Dp>&, nullptr_t)' (reversed)
+||  1005 |     operator<=>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|1005 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::unique_ptr<_Tp, _Dp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/shared_ptr.h:53,
+/usr/include/c++/14.2.1/bits/shared_ptr_base.h|1809 col 5| note: candidate: 'template<class _Tp, class _Up, __gnu_cxx::_Lock_policy _Lp> std::strong_ordering std::operator<=>(const __shared_ptr<_Tp1, _Lp>&, const __shared_ptr<_Tp2, _Lp>&)' (reversed)
+||  1809 |     operator<=>(const __shared_ptr<_Tp, _Lp>& __a,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/shared_ptr_base.h|1809 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__shared_ptr<_Tp1, _Lp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/shared_ptr_base.h|1815 col 5| note: candidate: 'template<class _Tp, __gnu_cxx::_Lock_policy _Lp> std::strong_ordering std::operator<=>(const __shared_ptr<_Tp, _Lp>&, nullptr_t)' (reversed)
+||  1815 |     operator<=>(const __shared_ptr<_Tp, _Lp>& __a, nullptr_t) noexcept
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/shared_ptr_base.h|1815 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::__shared_ptr<_Tp, _Lp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/shared_ptr.h|566 col 5| note: candidate: 'template<class _Tp, class _Up> std::strong_ordering std::operator<=>(const shared_ptr<_Tp>&, const shared_ptr<_Tp>&)' (reversed)
+||   566 |     operator<=>(const shared_ptr<_Tp>& __a,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/shared_ptr.h|566 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::shared_ptr<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/shared_ptr.h|572 col 5| note: candidate: 'template<class _Tp> std::strong_ordering std::operator<=>(const shared_ptr<_Tp>&, nullptr_t)' (reversed)
+||   572 |     operator<=>(const shared_ptr<_Tp>& __a, nullptr_t) noexcept
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/shared_ptr.h|572 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::shared_ptr<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+hse-se-cpp-2024-fluids/fixed.hpp|342 col 34| note: candidate: 'template<int N2, int K2> auto Fixed<N, K>::operator<=>(const Fixed<N2, K2>&) const [with int N2 = N2; int K2 = K2; int N = 32; int K = 16]' (rewritten)
+||   342 |   template <int N2, int K2> auto operator<=>(const Fixed<N2, K2> &other) const {
+||       |                                  ^~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|342 col 34| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const Fixed<N, K>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/regex.h|1116 col 5| note: candidate: 'template<class _BiIter> auto std::__cxx11::operator<=>(const sub_match<_BiIter>&, const sub_match<_BiIter>&)' (rewritten)
+||  1116 |     operator<=>(const sub_match<_BiIter>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/regex.h|1116 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::__cxx11::sub_match<_BiIter>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|594 col 5| note: candidate: 'template<class _Iterator>  requires  three_way_comparable<_Iterator, std::partial_ordering> constexpr std::compare_three_way_result_t<_Iterator, _Iterator> std::operator<=>(const reverse_iterator<_IteratorL>&, const reverse_iterator<_IteratorL>&)' (rewritten)
+||   594 |     operator<=>(const reverse_iterator<_Iterator>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|594 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::reverse_iterator<_IteratorL>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1745 col 5| note: candidate: 'template<class _Iterator>  requires  three_way_comparable<_Iterator, std::partial_ordering> constexpr std::compare_three_way_result_t<_Iterator, _Iterator> std::operator<=>(const move_iterator<_IteratorL>&, const move_iterator<_IteratorL>&)' (rewritten)
+||  1745 |     operator<=>(const move_iterator<_Iterator>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1745 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::move_iterator<_IteratorL>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/basic_string.h|3790 col 5| note: candidate: 'template<class _CharT, class _Traits, class _Alloc> constexpr decltype (__char_traits_cmp_cat<_Traits>(0)) std::operator<=>(const __cxx11::basic_string<_CharT, _Traits, _Allocator>&, const __cxx11::basic_string<_CharT, _Traits, _Allocator>&)' (rewritten)
+||  3790 |     operator<=>(const basic_string<_CharT, _Traits, _Alloc>& __lhs,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/basic_string.h|3790 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::__cxx11::basic_string<_CharT, _Traits, _Allocator>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/vector:66,
+/usr/include/c++/14.2.1/bits/stl_vector.h|2069 col 5| note: candidate: 'template<class _Tp, class _Alloc> constexpr std::__detail::__synth3way_t<_Iterator> std::operator<=>(const vector<_Tp, _Alloc>&, const vector<_Tp, _Alloc>&)' (rewritten)
+||  2069 |     operator<=>(const vector<_Tp, _Alloc>& __x, const vector<_Tp, _Alloc>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_vector.h|2069 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::vector<_Tp, _Alloc>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/functional:65:
+/usr/include/c++/14.2.1/array|310 col 5| note: candidate: 'template<class _Tp, long unsigned int _Nm> constexpr std::__detail::__synth3way_t<_Iterator> std::operator<=>(const array<_Tp, _Nm>&, const array<_Tp, _Nm>&)' (rewritten)
+||   310 |     operator<=>(const array<_Tp, _Nm>& __a, const array<_Tp, _Nm>& __b)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/array|310 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::array<_Tp, _Nm>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/format:52,
+/usr/include/c++/14.2.1/variant|1280 col 5| note: candidate: 'template<class ... _Types>  requires (three_way_comparable<_Types, std::partial_ordering> && ...) constexpr std::common_comparison_category_t<typename std::__detail::__cmp3way_res_impl<_Types, _Types>::type ...> std::operator<=>(const variant<_Types ...>&, const variant<_Types ...>&)' (rewritten)
+||  1280 |     operator<=>(const variant<_Types...>& __v, const variant<_Types...>& __w)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/variant|1280 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::variant<_Types ...>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/deque:66,
+/usr/include/c++/14.2.1/bits/stl_deque.h|2309 col 5| note: candidate: 'template<class _Tp, class _Alloc> std::__detail::__synth3way_t<_Iterator> std::operator<=>(const deque<_Tp, _Alloc>&, const deque<_Tp, _Alloc>&)' (rewritten)
+||  2309 |     operator<=>(const deque<_Tp, _Alloc>& __x, const deque<_Tp, _Alloc>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_deque.h|2309 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::deque<_Tp, _Alloc>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/list:65,
+/usr/include/c++/14.2.1/bits/stl_list.h|2158 col 5| note: candidate: 'template<class _Tp, class _Alloc> std::__detail::__synth3way_t<_Iterator> std::operator<=>(const __cxx11::list<_Tp, _Alloc>&, const __cxx11::list<_Tp, _Alloc>&)' (rewritten)
+||  2158 |     operator<=>(const list<_Tp, _Alloc>& __x, const list<_Tp, _Alloc>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_list.h|2158 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::__cxx11::list<_Tp, _Alloc>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/map:63,
+/usr/include/c++/14.2.1/bits/stl_map.h|1533 col 5| note: candidate: 'template<class _Key, class _Tp, class _Compare, class _Alloc> std::__detail::__synth3way_t<std::pair<const _Key, _Val> > std::operator<=>(const map<_Key, _Tp, _Compare, _Allocator>&, const map<_Key, _Tp, _Compare, _Allocator>&)' (rewritten)
+||  1533 |     operator<=>(const map<_Key, _Tp, _Compare, _Alloc>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_map.h|1533 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::map<_Key, _Tp, _Compare, _Allocator>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/map:64:
+/usr/include/c++/14.2.1/bits/stl_multimap.h|1155 col 5| note: candidate: 'template<class _Key, class _Tp, class _Compare, class _Alloc> std::__detail::__synth3way_t<std::pair<const _Key, _Val> > std::operator<=>(const multimap<_Key, _Tp, _Compare, _Allocator>&, const multimap<_Key, _Tp, _Compare, _Allocator>&)' (rewritten)
+||  1155 |     operator<=>(const multimap<_Key, _Tp, _Compare, _Alloc>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_multimap.h|1155 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::multimap<_Key, _Tp, _Compare, _Allocator>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/queue:66,
+/usr/include/c++/14.2.1/bits/stl_queue.h|432 col 5| note: candidate: 'template<class _Tp, class _Seq>  requires  three_way_comparable<_Seq, std::partial_ordering> std::compare_three_way_result_t<_Seq> std::operator<=>(const queue<_Tp, _Seq>&, const queue<_Tp, _Seq>&)' (rewritten)
+||   432 |     operator<=>(const queue<_Tp, _Seq>& __x, const queue<_Tp, _Seq>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_queue.h|432 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::queue<_Tp, _Seq>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/set:63,
+/usr/include/c++/14.2.1/bits/stl_set.h|1008 col 5| note: candidate: 'template<class _Key, class _Compare, class _Alloc> std::__detail::__synth3way_t<_Iterator> std::operator<=>(const set<_Key, _Compare, _Allocator>&, const set<_Key, _Compare, _Allocator>&)' (rewritten)
+||  1008 |     operator<=>(const set<_Key, _Compare, _Alloc>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_set.h|1008 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::set<_Key, _Compare, _Allocator>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/set:64:
+/usr/include/c++/14.2.1/bits/stl_multiset.h|994 col 5| note: candidate: 'template<class _Key, class _Compare, class _Alloc> std::__detail::__synth3way_t<_Iterator> std::operator<=>(const multiset<_Key, _Compare, _Allocator>&, const multiset<_Key, _Compare, _Allocator>&)' (rewritten)
+||   994 |     operator<=>(const multiset<_Key, _Compare, _Alloc>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_multiset.h|994 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::multiset<_Key, _Compare, _Allocator>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/stack:63,
+/usr/include/c++/14.2.1/bits/stl_stack.h|408 col 5| note: candidate: 'template<class _Tp, class _Seq>  requires  three_way_comparable<_Seq, std::partial_ordering> std::compare_three_way_result_t<_Seq> std::operator<=>(const stack<_Tp, _Seq>&, const stack<_Tp, _Seq>&)' (rewritten)
+||   408 |     operator<=>(const stack<_Tp, _Seq>& __x, const stack<_Tp, _Seq>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_stack.h|408 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::stack<_Tp, _Seq>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/forward_list:40,
+/usr/include/c++/14.2.1/bits/forward_list.h|1472 col 5| note: candidate: 'template<class _Tp, class _Alloc> std::__detail::__synth3way_t<_Iterator> std::operator<=>(const forward_list<_Tp, _Alloc>&, const forward_list<_Tp, _Alloc>&)' (rewritten)
+||  1472 |     operator<=>(const forward_list<_Tp, _Alloc>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/forward_list.h|1472 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::forward_list<_Tp, _Alloc>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/stdc++.h:99:
+/usr/include/c++/14.2.1/coroutine|155 col 3| note: candidate: 'constexpr std::strong_ordering std::__n4861::operator<=>(coroutine_handle<void>, coroutine_handle<void>)' (rewritten)
+||   155 |   operator<=>(coroutine_handle<> __a, coroutine_handle<> __b) noexcept
+||       |   ^~~~~~~~
+/usr/include/c++/14.2.1/coroutine|155 col 34| note:   no known conversion for argument 1 from 'Fixed<32, 16>' to 'std::__n4861::coroutine_handle<void>'
+||   155 |   operator<=>(coroutine_handle<> __a, coroutine_handle<> __b) noexcept
+||       |               ~~~~~~~~~~~~~~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/bits/ios_base.h:46,
+/usr/include/c++/14.2.1/system_error|316 col 3| note: candidate: 'std::strong_ordering std::operator<=>(const error_code&, const error_code&)' (rewritten)
+||   316 |   operator<=>(const error_code& __lhs, const error_code& __rhs) noexcept
+||       |   ^~~~~~~~
+/usr/include/c++/14.2.1/system_error|316 col 33| note:   no known conversion for argument 1 from 'Fixed<32, 16>' to 'const std::error_code&'
+||   316 |   operator<=>(const error_code& __lhs, const error_code& __rhs) noexcept
+||       |               ~~~~~~~~~~~~~~~~~~^~~~~
+/usr/include/c++/14.2.1/system_error|498 col 3| note: candidate: 'std::strong_ordering std::operator<=>(const error_condition&, const error_condition&)' (rewritten)
+||   498 |   operator<=>(const error_condition& __lhs,
+||       |   ^~~~~~~~
+/usr/include/c++/14.2.1/system_error|498 col 38| note:   no known conversion for argument 1 from 'Fixed<32, 16>' to 'const std::error_condition&'
+||   498 |   operator<=>(const error_condition& __lhs,
+||       |               ~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+/usr/include/c++/14.2.1/variant|1303 col 3| note: candidate: 'constexpr std::strong_ordering std::operator<=>(monostate, monostate)' (rewritten)
+||  1303 |   operator<=>(monostate, monostate) noexcept { return strong_ordering::equal; }
+||       |   ^~~~~~~~
+/usr/include/c++/14.2.1/variant|1303 col 15| note:   no known conversion for argument 1 from 'Fixed<32, 16>' to 'std::monostate'
+||  1303 |   operator<=>(monostate, monostate) noexcept { return strong_ordering::equal; }
+||       |               ^~~~~~~~~
+|| In file included from /usr/include/c++/14.2.1/x86_64-pc-linux-gnu/bits/stdc++.h:184:
+/usr/include/c++/14.2.1/thread|75 col 3| note: candidate: 'std::strong_ordering std::operator<=>(thread::id, thread::id)' (rewritten)
+||    75 |   operator<=>(thread::id __x, thread::id __y) noexcept
+||       |   ^~~~~~~~
+/usr/include/c++/14.2.1/thread|75 col 26| note:   no known conversion for argument 1 from 'Fixed<32, 16>' to 'std::thread::id'
+||    75 |   operator<=>(thread::id __x, thread::id __y) noexcept
+||       |               ~~~~~~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|551 col 5| note: candidate: 'template<class _IteratorL, class _IteratorR> constexpr bool std::operator>(const reverse_iterator<_IteratorL>&, const reverse_iterator<_IteratorR>&) requires requires{{std::operator>::__x->base() < std::operator>::__y->base()} -> decltype(auto) [requires std::convertible_to<<placeholder>, bool>];}'
+||   551 |     operator>(const reverse_iterator<_IteratorL>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|551 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::reverse_iterator<_IteratorL>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1714 col 5| note: candidate: 'template<class _IteratorL, class _IteratorR> constexpr bool std::operator>(const move_iterator<_IteratorL>&, const move_iterator<_IteratorR>&) requires requires{{std::operator>::__y->base() < std::operator>::__x->base()} -> decltype(auto) [requires std::convertible_to<<placeholder>, bool>];}'
+||  1714 |     operator>(const move_iterator<_IteratorL>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_iterator.h|1714 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::move_iterator<_IteratorL>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/optional|1258 col 5| note: candidate: 'template<class _Tp, class _Up> constexpr std::__optional_gt_t<_Tp, _Up> std::operator>(const optional<_Tp>&, const optional<_Up>&)'
+||  1258 |     operator>(const optional<_Tp>& __lhs, const optional<_Up>& __rhs)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1258 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::optional<_Tp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/optional|1396 col 5| note: candidate: 'template<class _Tp, class _Up> constexpr std::__optional_gt_t<_Tp, _Up> std::operator>(const optional<_Tp>&, const _Up&)'
+||  1396 |     operator>(const optional<_Tp>& __lhs, const _Up& __rhs)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1396 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::optional<_Tp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/optional|1402 col 5| note: candidate: 'template<class _Tp, class _Up> constexpr std::__optional_gt_t<_Up, _Tp> std::operator>(const _Up&, const optional<_Tp>&)'
+||  1402 |     operator>(const _Up& __lhs, const optional<_Tp>& __rhs)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/optional|1402 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::optional<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/variant|1269 col 3| note: candidate: 'template<class ... _Types> constexpr bool std::operator>(const variant<_Types ...>&, const variant<_Types ...>&)'
+||  1269 |   _VARIANT_RELATION_FUNCTION_TEMPLATE(>, greater)
+||       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/variant|1269 col 3| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::variant<_Types ...>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|942 col 5| note: candidate: 'template<class _Tp, class _Dp, class _Up, class _Ep> constexpr bool std::operator>(const unique_ptr<_Tp, _Dp>&, const unique_ptr<_Up, _Ep>&)'
+||   942 |     operator>(const unique_ptr<_Tp, _Dp>& __x,
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|942 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::unique_ptr<_Tp, _Dp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|950 col 5| note: candidate: 'template<class _Tp, class _Dp> constexpr bool std::operator>(const unique_ptr<_Tp, _Dp>&, nullptr_t)'
+||   950 |     operator>(const unique_ptr<_Tp, _Dp>& __x, nullptr_t)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|950 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::unique_ptr<_Tp, _Dp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|960 col 5| note: candidate: 'template<class _Tp, class _Dp> constexpr bool std::operator>(nullptr_t, const unique_ptr<_Tp, _Dp>&)'
+||   960 |     operator>(nullptr_t, const unique_ptr<_Tp, _Dp>& __x)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/unique_ptr.h|960 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::unique_ptr<_Tp, _Dp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_queue.h|411 col 5| note: candidate: 'template<class _Tp, class _Seq> bool std::operator>(const queue<_Tp, _Seq>&, const queue<_Tp, _Seq>&)'
+||   411 |     operator>(const queue<_Tp, _Seq>& __x, const queue<_Tp, _Seq>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_queue.h|411 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::queue<_Tp, _Seq>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/stl_stack.h|387 col 5| note: candidate: 'template<class _Tp, class _Seq> bool std::operator>(const stack<_Tp, _Seq>&, const stack<_Tp, _Seq>&)'
+||   387 |     operator>(const stack<_Tp, _Seq>& __x, const stack<_Tp, _Seq>& __y)
+||       |     ^~~~~~~~
+/usr/include/c++/14.2.1/bits/stl_stack.h|387 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::stack<_Tp, _Seq>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+|| In file included from /usr/include/c++/14.2.1/valarray:605,
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note: candidate: 'template<class _Dom1, class _Dom2> std::_Expr<std::__detail::_BinClos<std::__greater, std::_Expr, std::_Expr, _Dom1, _Dom2>, typename std::__fun<std::__greater, typename _Dom1::value_type>::result_type> std::operator>(const _Expr<_Dom1, typename _Dom1::value_type>&, const _Expr<_Dom2, typename _Dom2::value_type>&)'
+||   420 |     _DEFINE_EXPR_BINARY_OPERATOR(>, struct std::__greater)
+||       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::_Expr<_Dom1, typename _Dom1::value_type>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note: candidate: 'template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__greater, std::_Expr, std::_Constant, _Dom, typename _Dom::value_type>, typename std::__fun<std::__greater, typename _Dom1::value_type>::result_type> std::operator>(const _Expr<_Dom1, typename _Dom1::value_type>&, const typename _Dom::value_type&)'
+||   420 |     _DEFINE_EXPR_BINARY_OPERATOR(>, struct std::__greater)
+||       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::_Expr<_Dom1, typename _Dom1::value_type>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note: candidate: 'template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__greater, std::_Constant, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__greater, typename _Dom1::value_type>::result_type> std::operator>(const typename _Dom::value_type&, const _Expr<_Dom1, typename _Dom1::value_type>&)'
+||   420 |     _DEFINE_EXPR_BINARY_OPERATOR(>, struct std::__greater)
+||       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::_Expr<_Dom1, typename _Dom1::value_type>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note: candidate: 'template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__greater, std::_Expr, std::_ValArray, _Dom, typename _Dom::value_type>, typename std::__fun<std::__greater, typename _Dom1::value_type>::result_type> std::operator>(const _Expr<_Dom1, typename _Dom1::value_type>&, const valarray<typename _Dom::value_type>&)'
+||   420 |     _DEFINE_EXPR_BINARY_OPERATOR(>, struct std::__greater)
+||       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::_Expr<_Dom1, typename _Dom1::value_type>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note: candidate: 'template<class _Dom> std::_Expr<std::__detail::_BinClos<std::__greater, std::_ValArray, std::_Expr, typename _Dom::value_type, _Dom>, typename std::__fun<std::__greater, typename _Dom1::value_type>::result_type> std::operator>(const valarray<typename _Dom::value_type>&, const _Expr<_Dom1, typename _Dom1::value_type>&)'
+||   420 |     _DEFINE_EXPR_BINARY_OPERATOR(>, struct std::__greater)
+||       |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/bits/valarray_after.h|420 col 5| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::_Expr<_Dom1, typename _Dom1::value_type>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note: candidate: 'template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__greater, std::_ValArray, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__greater, _Tp>::result_type> std::operator>(const valarray<_Tp>&, const valarray<_Tp>&)'
+||  1211 | _DEFINE_BINARY_OPERATOR(>, __greater)
+||       | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::valarray<_Tp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note: candidate: 'template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__greater, std::_ValArray, std::_Constant, _Tp, _Tp>, typename std::__fun<std::__greater, _Tp>::result_type> std::operator>(const valarray<_Tp>&, const typename valarray<_Tp>::value_type&)'
+||  1211 | _DEFINE_BINARY_OPERATOR(>, __greater)
+||       | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   'Fixed<32, 16>' is not derived from 'const std::valarray<_Tp>'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note: candidate: 'template<class _Tp> std::_Expr<std::__detail::_BinClos<std::__greater, std::_Constant, std::_ValArray, _Tp, _Tp>, typename std::__fun<std::__greater, _Tp>::result_type> std::operator>(const typename valarray<_Tp>::value_type&, const valarray<_Tp>&)'
+||  1211 | _DEFINE_BINARY_OPERATOR(>, __greater)
+||       | ^~~~~~~~~~~~~~~~~~~~~~~
+/usr/include/c++/14.2.1/valarray|1211 col 1| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|404 col 23| note:   mismatched types 'const std::valarray<_Tp>' and 'int'
+||   404 |             if (old_v > 0) {
+||       |                 ~~~~~~^~~
+hse-se-cpp-2024-fluids/simulation.hpp|409 col 23| error: no match for 'operator*=' (operand types are 'Fixed<32, 16>' and 'double')
+||   409 |                 force *= 0.8;
+||       |                 ~~~~~~^~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|318 col 42| note: candidate: 'template<int N2, int K2> Fixed<N, K>& Fixed<N, K>::operator*=(Fixed<N2, K2>&) [with int N2 = N2; int K2 = K2; int N = 32; int K = 16]'
+||   318 |   template <int N2, int K2> Fixed<N, K> &operator*=(Fixed<N2, K2> &a) {
+||       |                                          ^~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|318 col 42| note:   template argument deduction/substitution failed:
+hse-se-cpp-2024-fluids/simulation.hpp|409 col 23| note:   mismatched types 'Fixed<N, K>' and 'double'
+||   409 |                 force *= 0.8;
+||       |                 ~~~~~~^~~~~~
+hse-se-cpp-2024-fluids/simulation.hpp|411 col 28| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   411 |                 p[x][y] += p_type(force / dirs[x][y]);
+||       |                            ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|308 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator+=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   308 |   template <int N2, int K2> Fixed<N, K> &operator+=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|412 col 34| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   412 |                 total_delta_p += p_type(force / dirs[x][y]);
+||       |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|308 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator+=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   308 |   template <int N2, int K2> Fixed<N, K> &operator+=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|414 col 38| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   414 |                 p[x + dx][y + dy] += p_type(force / dirs[x + dx][y + dy]);
+||       |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|308 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator+=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   308 |   template <int N2, int K2> Fixed<N, K> &operator+=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+hse-se-cpp-2024-fluids/simulation.hpp|415 col 34| error: cannot bind non-const lvalue reference of type 'Fixed<32, 16>&' to an rvalue of type 'Fixed<32, 16>'
+||   415 |                 total_delta_p += p_type(force / dirs[x + dx][y + dy]);
+||       |                                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+hse-se-cpp-2024-fluids/fixed.hpp|308 col 68| note:   initializing argument 1 of 'Fixed<N, K>& Fixed<N, K>::operator+=(Fixed<N2, K2>&) [with int N2 = 32; int K2 = 16; int N = 32; int K = 16]'
+||   308 |   template <int N2, int K2> Fixed<N, K> &operator+=(Fixed<N2, K2> &a) {
+||       |                                                     ~~~~~~~~~~~~~~~^
+|| /home/ilya/hse-se-cpp-2024-fluids/fixed.hpp: In member function 'constexpr int64_t Fixed<N, K>::v() const [with int N = 32; int K = 16]':
+hse-se-cpp-2024-fluids/fixed.hpp|267 col 3| warning: control reaches end of non-void function [-Wreturn-type]
+||   267 |   }
+||       |   ^
+|| Exited with code 2

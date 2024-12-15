@@ -35,6 +35,7 @@
 //
 
 int main(int argc, char *argv[]) {
-  Simulation<Fixed<32, 16>, Fast_Fixed<32, 16>, Fast_Fixed<14, 4>> sim;
+  Simulation<Fixed<32, 16>, Fixed<32, 16>, Fixed<32, 16>> sim;
+  sim.run();
   return 0;
 }

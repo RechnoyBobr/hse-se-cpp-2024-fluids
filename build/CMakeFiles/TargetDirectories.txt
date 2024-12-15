@@ -1,3 +1,0 @@
-/home/ilya/hse-cpp-course/Fluids/build/CMakeFiles/Fluids.dir
-/home/ilya/hse-cpp-course/Fluids/build/CMakeFiles/edit_cache.dir
-/home/ilya/hse-cpp-course/Fluids/build/CMakeFiles/rebuild_cache.dir

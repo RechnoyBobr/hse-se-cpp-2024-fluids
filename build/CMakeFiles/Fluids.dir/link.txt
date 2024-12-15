@@ -1,1 +1,0 @@
-/usr/sbin/c++ -Wall -std=c++23 -DTYPES="\"FLOAT, FIXED(32,16), FAST_FIXED(13,4), DOUBLE\"" -g CMakeFiles/Fluids.dir/main.cpp.o -o Fluids
