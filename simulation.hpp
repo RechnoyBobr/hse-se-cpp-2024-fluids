@@ -154,7 +154,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
 
     v_t &get(int x, int y, int dx, int dy) {
       size_t i = ranges::find(deltas, pair(dx, dy)) - deltas.begin();
-      if (i > deltas.size()) {
+      if (i >= deltas.size()) {
         cout << dx << " " << dy << "\n";
       }
       assert(i < deltas.size());
@@ -202,7 +202,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
   inline static VectorField<v_flow, v_flow::n, v_flow::k> velocity_flow;
   // TODO: find a way to use sizes directly from compile options or runtime
 
-  p_type random01() { return p_type::from_raw((rnd() & ((1 << 16) - 1))); }
+  p_type random01() { return p_type::from_raw((rnd() & ((1 << p_type::k) - 1))); }
 
 public:
   constexpr Simulation() {
