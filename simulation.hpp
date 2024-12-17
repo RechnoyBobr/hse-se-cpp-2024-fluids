@@ -202,7 +202,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
   inline static VectorField<v_flow, v_flow::n, v_flow::k> velocity_flow;
   // TODO: find a way to use sizes directly from compile options or runtime
 
-  p_type random01() { return p_type::from_raw((rnd() & ((1 << p_type::k) - 1))); }
+  p_type random01() { return p_type::from_raw((rnd() & ((1 << v_type::k) - 1))); }
 
 public:
   constexpr Simulation() {
@@ -426,6 +426,9 @@ public:
         for (size_t x = 0; x < N; ++x) {
           for (size_t y = 0; y < M; ++y) {
             if (field[x][y] != '#' && last_use[x][y] != UT) {
+              if (i == 3 && x == 23 && y == 63) {
+                std::cout << "Hell break loose\n";
+              }
               auto [t, local_prop, _] =
                   VectorField<v_flow, v_flow::n, v_flow::k>::propagate_flow(
                       x, y, 1);
@@ -445,7 +448,13 @@ public:
           for (auto [dx, dy] : deltas) {
             auto old_v = velocity.get(x, y, dx, dy);
             auto new_v = velocity_flow.get(x, y, dx, dy);
+            if (new_v.v() > 1000000) {
+              std::cout << i << " " << x << " " << y << " " << new_v.v() << "\n";
+            }
             if (old_v > v_type::from_raw(0)) {
+              if (new_v > old_v) {
+                cout << "Error";
+              }
               assert(new_v <= old_v);
               velocity.get(x, y, dx, dy) = new_v;
               auto force = (old_v - new_v) * rho[(int)field[x][y]];

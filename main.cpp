@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
   // auto result = x - f;
   // std::cout << result.v();
   run_asserts();
-  Simulation<Fast_Fixed<32, 10>, Fast_Fixed<32, 10>, Fast_Fixed<32, 10>> sim;
+  Simulation<Fixed<32, 16>, Fast_Fixed<32, 10>, Fast_Fixed<32, 10>> sim;
   sim.run();
   return 0;
 }
