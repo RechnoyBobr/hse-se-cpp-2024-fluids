@@ -20,6 +20,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
 
   void propagate_stop(int x, int y, bool force = false) {
     if (!force) {
+
       bool stop = true;
       for (auto [dx, dy] : deltas) {
         int nx = x + dx, ny = y + dy;
@@ -53,7 +54,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
         continue;
       }
       auto v = velocity.get(x, y, dx, dy);
-      if (v < v_type::from_raw(0)) {
+      if (v < v_type(0)) {
         continue;
       }
       sum += v;
@@ -97,7 +98,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
         tres[i] = sum;
       }
 
-      if (sum == 0) {
+      if (sum == v_type(0)) {
         break;
       }
 
@@ -153,6 +154,9 @@ template <class p_type, class v_type, class v_flow> class Simulation {
 
     v_t &get(int x, int y, int dx, int dy) {
       size_t i = ranges::find(deltas, pair(dx, dy)) - deltas.begin();
+      if (i > deltas.size()) {
+        cout << dx << " " << dy << "\n";
+      }
       assert(i < deltas.size());
       return v[x][y][i];
     }
@@ -356,14 +360,14 @@ public:
       for (size_t j = 0; j < M; j++) {
         dirs[i][j] = 0;
         last_use[i][j] = 0;
-        p[i][j] = 0;
+        p[i][j] = p_type();
       }
     }
   }
   void run() {
-    rho[' '] = 0.01;
-    rho['.'] = 1000;
-    p_type g = 0.1;
+    rho[' '] = p_type(0.01);
+    rho['.'] = p_type(1000);
+    p_type g = p_type(0.1);
 
     for (size_t x = 0; x < N; ++x) {
       for (size_t y = 0; y < M; ++y) {
@@ -425,7 +429,7 @@ public:
               auto [t, local_prop, _] =
                   VectorField<v_flow, v_flow::n, v_flow::k>::propagate_flow(
                       x, y, 1);
-              if (t > v_flow::from_raw(0)) {
+              if (t > v_flow(0)) {
                 prop = true;
               }
             }

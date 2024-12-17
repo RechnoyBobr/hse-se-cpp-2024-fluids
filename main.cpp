@@ -35,7 +35,21 @@
 //
 
 int main(int argc, char *argv[]) {
-  Simulation<Fixed<32, 16>, Fixed<32, 16>, Fixed<32, 16>> sim;
+  // Fixed<32, 0> x(5);
+  // Fast_Fixed<10, 0> f(4);
+  // auto result = x - f;
+  // std::cout << result.v();
+  auto y = Fast_Fixed<16, 12>(14);
+  auto x = Fixed<32, 14>(120);
+  auto res2 = x * y;
+  auto res3 = x / y;
+  assert((res3.v() >> 14) == 8);
+  assert((res2.v() >> 14) == 1680);
+  auto res = x + y;
+  auto res1 = x - y;
+  assert((res1.v() >> 14) == 106);
+  assert((res.v() >> 14) == 134);
+  Simulation<Fixed<32, 16>, Fast_Fixed<32, 16>, Fixed<32, 16>> sim;
   sim.run();
   return 0;
 }
