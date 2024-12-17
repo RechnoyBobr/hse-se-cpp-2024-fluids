@@ -205,7 +205,7 @@ template <class p_type, class v_type, class v_flow> class Simulation {
   p_type random01() { return p_type::from_raw((rnd() & ((1 << 16) - 1))); }
 
 public:
-  Simulation() {
+  constexpr Simulation() {
     char field_c[N][M + 1] = {
         "######################################################################"
         "##"
