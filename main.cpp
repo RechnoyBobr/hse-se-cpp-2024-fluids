@@ -1,4 +1,4 @@
-#include "simulation.hpp"
+  #include "simulation.hpp"
 
 #define FIXED(N, K) Fixed<N, K>
 #define FAST_FIXED(N, K) Fast_Fixed<N, K>
@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
   // Fast_Fixed<10, 0> f(4);
   // auto result = x - f;
   // std::cout << result.v();
-  auto y = Fast_Fixed<16, 12>(14);
+  auto y = Fast_Fixed<16, 7>(14);
   auto x = Fixed<32, 14>(120);
   auto res2 = x * y;
   auto res3 = x / y;
@@ -49,7 +49,7 @@ int main(int argc, char *argv[]) {
   auto res1 = x - y;
   assert((res1.v() >> 14) == 106);
   assert((res.v() >> 14) == 134);
-  Simulation<Fixed<32, 16>, Fast_Fixed<32, 16>, Fixed<32, 16>> sim;
+  Simulation<Fixed<64, 16>, Fast_Fixed<32, 16>, Fixed<32, 16>> sim;
   sim.run();
   return 0;
 }
