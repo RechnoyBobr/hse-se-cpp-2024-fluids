@@ -1,8 +1,9 @@
 #include "fixed.hpp"
 #include "simulation.hpp"
+#include "sim_gen.hpp"
+#include "getopt.h"
 
-
-void run_asserts() {
+constexpr void run_asserts() {
     auto y = Fast_Fixed<16, 7>(14);
     auto x = Fixed<32, 14>(120);
     auto res2 = x * y;
@@ -19,52 +20,79 @@ void run_asserts() {
 }
 
 
-//     constexpr std::array<char[20], 1000> split_types() {
-//   std::array<char[20], 1000> result = {};
-//   bool inside_brackets = false;
-//   int ind_tmp = 0;
-//   int i = 0;
-//   int ind = 0;
-//   for (; i < 10000; i++) {
-//     if (res[i] == '\0') {
-//       break;
-//     }
-//     char ch = res[i];
-//     if (res[i] == ',' && !inside_brackets) {
-//       ind++;
-//       ind_tmp = 0;
-//     } else if (res[i] != ' ' && res[i] != '\"') {
-//       result[ind][ind_tmp] = res[i];
-//       ind_tmp++;
-//       if (res[i] == '(') {
-//         inside_brackets = true;
-//       } else if (res[i] == ')') {
-//         inside_brackets = false;
-//       }
-//     }
-//   }
-//   return result;
-// }
+auto &get_sim(vector<string_view> &m) {
+    for (size_t i = 0; i < sims.size(); i++) {
+        int flag = 1;
+        for (size_t j = 0; j < 3; j++) {
+            for (size_t k = 0; k < m[j].size(); k++) {
+                if (m[j][k] != sims_names[i][j][k]) {
+                    flag = 0;
+                    break;
+                }
+            }
+            if (!flag) {
+                break;
+            }
+        }
+        if (flag) {
+            return sims[i];
+        }
+    }
+    cout << "No type in the DTYPES\n";
+    assert(false);
+}
+
 
 int main(int argc, char *argv[]) {
-    // run_asserts();
-    double empty_rho, fluid_rho, g_double;
-    int n, m;
-    // Process_Types(types{});
-    // ifstream in = ifstream("./input.txt");
-    // in >> empty_rho >> fluid_rho >> g_double;
-    Simulation<Fixed<32,16>,Fixed<32,16>,Fixed<32,16>,36,84> d;
-    d.run();
-    // d.rho[' '] = Fixed<16, 8>(empty_rho);
-    // d.rho['.'] = Fixed<16, 8>(fluid_rho);
-    // Double x();
-    // in.get();
-    // d.g = Fixed<16, 8>(g_double);
-    // for (int i = 0; i < n; i++) {
-    //     in.getline(field[i], m + 1);
-    // }
-    // in.close();
-    // Simulation<Fixed<64, 10>, Fast_Fixed<32, 12>, Fast_Fixed<32, 10>, 36, 84> sim;
-    // sim.run();
+    run_asserts();
+
+    string_view p_type_raw_str;
+    string_view v_type_raw_str;
+    string_view v_flow_type_raw_str;
+    int c;
+    struct option long_options[] = {
+        {"p_type", required_argument, 0, 'p'},
+        {"v_type", required_argument, 0, 'v'},
+        {"v_flow_type", required_argument, 0, 'f'}
+    };
+    int opt_idx = 0;
+    while ((c = getopt_long(argc, argv, "pvf:", long_options, &opt_idx)) != -1) {
+        switch (c) {
+            case 'p': {
+                p_type_raw_str = optarg;
+                break;
+            }
+            case 'v': {
+                v_type_raw_str = optarg;
+                break;
+            }
+            case 'f': {
+                v_flow_type_raw_str = optarg;
+                break;
+            }
+            default: {
+                std::cout << "Can't recognize the flag\n";
+                return -1;
+            }
+        }
+    }
+    vector<string_view> vec{p_type_raw_str, v_type_raw_str, v_flow_type_raw_str};
+    auto sim = get_sim(vec);
+    visit([](auto &sim) {
+        ifstream in = ifstream("./input.txt");
+        double empty_rho, fluid_rho, g_double;
+        in >> empty_rho >> fluid_rho >> g_double;
+        int n = 36, m = 84;
+        sim.rho[' '] = empty_rho;
+        sim.rho['.'] = fluid_rho;
+        in.get();
+        sim.g = g_double;
+        for (int i = 0; i < n; i++) {
+            in.getline(sim.field[i], m + 1);
+        }
+        in.close();
+        sim.run();
+    }, sim);
+
     return 0;
 }

@@ -1,17 +1,16 @@
 #pragma once
 
 #include "fixed.hpp"
+#include "simulation.hpp"
 
 #define ERROR_TYPES_MACRO \
 static_assert(false,"You should specify available types through compile flag -DTYPES");
-#define TYPES FIXED(10,7), FAST_FIXED(13,1), FIXED(13,7)
+#ifdef TYPES
 #define FIXED(N,K) Fixed<N,K>
 #define FAST_FIXED(N,K) Fast_Fixed<N,K>
 #define DOUBLE Double
 #define FLOAT Float
-#ifndef TYPES
-ERROR_TYPES_MACRO
-#endif
+
 #ifdef SIZES
 // Deal with size choosing
 #endif
@@ -44,6 +43,15 @@ struct Type_List_Concat<Type_List<Ts1...>, Type_List<Ts2...> > {
     using type = Type_List<Ts1..., Ts2...>;
 };
 
+template<typename... Tuples>
+using common_simulation_variant = std::variant<
+    Simulation<
+        std::tuple_element_t<0, Tuples>,
+        std::tuple_element_t<1, Tuples>,
+        std::tuple_element_t<2, Tuples>,
+        36, 84
+    >...
+>;
 
 template<typename... F, typename... S, typename... T>
 struct triplet<Type_List<F...>, Type_List<S...>, Type_List<T...> > {
@@ -101,24 +109,40 @@ public:
 };
 
 
-template<typename tuple>
-void print_types() {
+template<typename var, typename tuple>
+constexpr auto create_simulation() {
     using p_type = std::tuple_element_t<0, tuple>;
     using v_type = std::tuple_element_t<1, tuple>;
     using v_flow_type = std::tuple_element_t<2, tuple>;
-    std::cout << "Type: " << typeid(p_type).name() << " " << typeid(v_type).name() << " " << typeid(v_flow_type).
-            name()
-            << " " << "\n";
+    return var(Simulation<p_type, v_type, v_flow_type, 36, 84>{});
+}
+
+template<typename tuple>
+constexpr auto create_names() {
+    using p_type = std::tuple_element_t<0, tuple>;
+    using v_type = std::tuple_element_t<1, tuple>;
+    using v_flow_type = std::tuple_element_t<2, tuple>;
+    auto p_name = p_type::get_name();
+    auto v_name = v_type::get_name();
+    auto v_flow_name = v_flow_type::get_name();
+    return std::array{p_name, v_name, v_flow_name};
+}
+
+
+template<typename... ts>
+constexpr auto Process_Types(Type_List<ts...>) {
+    using variant = common_simulation_variant<ts...>;
+    return std::array{(create_simulation<variant, ts>())...};
 }
 
 template<typename... ts>
-void call_print_types() {
-    (print_types<ts>(), ...);
+constexpr auto Process_Names(Type_List<ts...>) {
+    return std::array{(create_names<ts>())...};
 }
 
-template<typename... ts>
-void Process_Types(Type_List<ts...>) {
-    (call_print_types<ts>(), ...);
-}
-
-using types = typename cartesian_product_impl<AllTypes, AllTypes, AllTypes>::type;
+using types = cartesian_product_impl<AllTypes, AllTypes, AllTypes>::type;
+inline auto sims = Process_Types(types{});
+inline auto sims_names = Process_Names(types{});
+#else
+ERROR_TYPES_MACRO
+#endif

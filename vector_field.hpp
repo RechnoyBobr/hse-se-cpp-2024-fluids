@@ -1,8 +1,10 @@
 #pragma once
 
 #include <bits/stdc++.h>
-
+#include "fixed.hpp"
 using namespace std;
+
+template<typename T,typename T1>T amin(T &a,T1 b){if(b<a)a=b;return a;}
 
 template<typename v_t, int P, int K, int N, int M>
 class VectorField {
@@ -47,10 +49,15 @@ public:
                     continue;
                 }
                 // assert(v >= velocity_flow.get(x, y, dx, dy));
-                auto vp = min(lim, cap - flow);
+                v_t vp;
+                if (lim < cap - flow) {
+                    vp = lim;
+                }else {
+                    vp = cap - flow;
+                }
                 if (last_use[nx][ny] == UT - 1) {
                     if (x == 24 && y == 63 && dx == -1 && dy == 0) {
-                        // std::cout << "There is a bug!\n";
+                        std::cout << "There is a bug!\n";
                     }
                     velocity_flow.add(x, y, dx, dy, vp, deltas);
                     last_use[x][y] = UT;

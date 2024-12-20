@@ -5,12 +5,17 @@
 #include <tuple>
 
 
+#define TO_STRING(x) #x
+
 class Abstract_Number {
 };
 
 template<typename T>
 concept is_number_class =
-        requires(T obj) { requires(std::convertible_to<decltype(obj.v()), int>); };
+        requires(T obj)
+        {
+            requires(std::convertible_to<decltype(obj.v()), int> || std::convertible_to<decltype(obj.v()), double>);
+        };
 
 template<is_number_class First, is_number_class Second>
 constexpr static auto align_values(First f, Second s) {
@@ -40,8 +45,45 @@ class Double;
 
 template<int N, int K>
 class Fast_Fixed : public Abstract_Number {
-
 public:
+    constexpr static auto get_name() {
+        std::array<char, 17> res{};
+        res[0] = 'F';
+        res[1] = 'A';
+        res[2] = 'S';
+        res[3] = 'T';
+        res[4] = '_';
+        res[5] = 'F';
+        res[6] = 'I';
+        res[7] = 'X';
+        res[8] = 'E';
+        res[9] = 'D';
+        res[10] = '(';
+        int ind = 11;
+        if constexpr (N >= 10) {
+            res[ind] = '0' + (N / 10);
+            ind++;
+            res[ind] = '0' + (N % 10);
+            ind++;
+        } else {
+            res[ind] = '0' + (N % 10);
+            ind++;
+        }
+        res[ind] = ',';
+        ind++;
+        if constexpr (K >= 10) {
+            res[ind] = '0' + (K / 10);
+            ind++;
+            res[ind] = '0' + (K % 10);
+            ind++;
+        } else {
+            res[ind] = '0' + (K % 10);
+            ind++;
+        }
+        res[ind] = ')';
+        return res;
+    }
+
     constexpr static int n = N;
     constexpr static int k = K;
 
@@ -266,11 +308,42 @@ public:
 
 template<int N, int K>
 class Fixed : public Abstract_Number {
-
-
 public:
     constexpr static int n = N;
     constexpr static int k = K;
+
+    constexpr static auto get_name() {
+        std::array<char, 17> res{};
+        res[0] = 'F';
+        res[1] = 'I';
+        res[2] = 'X';
+        res[3] = 'E';
+        res[4] = 'D';
+        res[5] = '(';
+        int ind = 6;
+        if constexpr (N >= 10) {
+            res[ind] = '0' + (N / 10);
+            ind++;
+            res[ind] = '0' + (N % 10);
+            ind++;
+        } else {
+            res[ind] = '0' + (N % 10);
+            ind++;
+        }
+        res[ind] = ',';
+        ind++;
+        if constexpr (K >= 10) {
+            res[ind] = static_cast<char>('0' + (K / 10));
+            ind++;
+            res[ind] = '0' + (K % 10);
+            ind++;
+        } else {
+            res[ind] = '0' + (K % 10);
+            ind++;
+        }
+        res[ind] = ')';
+        return res;
+    }
 
     constexpr Fixed(int v) {
         if constexpr (N == 8) {
@@ -369,6 +442,8 @@ public:
                 return v32;
             case 64:
                 return v64;
+            default:
+                return -1;
         }
     }
 
@@ -506,6 +581,18 @@ class Double : public Abstract_Number {
 public:
     static constexpr int n = 64;
     static constexpr int k = 0;
+
+    constexpr static auto get_name() {
+        std::array<char, 17> res{};
+        res[0] = 'D';
+        res[1] = 'O';
+        res[2] = 'U';
+        res[3] = 'B';
+        res[4] = 'L';
+        res[5] = 'E';
+        return res;
+    }
+
     double v_double;
 
     constexpr Double(): v_double(0) {
@@ -524,6 +611,7 @@ public:
         return ret;
     }
 
+
     [[nodiscard]] constexpr double v() const { return v_double; }
 
 
@@ -536,60 +624,42 @@ public:
     template<is_number_class Other>
     constexpr auto operator+(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            return Double::from_raw(first.v() + second.v());
-        } else {
-            return Other::from_raw(first.v() + second.v());
-        }
+        return Double::from_raw(first.v() + second.v());
     }
 
     template<is_number_class Other>
     constexpr auto operator-(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            return Double::from_raw(first.v() - second.v());
-        } else {
-            return Other::from_raw(first.v() - second.v());
-        }
+        return Double::from_raw(first.v() - second.v());
     }
 
     template<is_number_class Other>
     constexpr auto operator*(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            if (second.v() / (1 << first.k) != 0) {
-                return Double::from_raw((int64_t) first.v() *
-                                        (second.v() / (1 << first.k)));
-            }
-            return Double::from_raw((static_cast<double>(first.v()) * second.v()) /
-                                    (1 << first.k));
-        }
         if (second.v() / (1 << first.k) != 0) {
-            return Other::from_raw((double) first.v() * (second.v() / (1 << first.k)));
+            return Double::from_raw((int64_t) first.v() *
+                                    (second.v() / (1 << first.k)));
         }
-        return Other::from_raw(((double) first.v() * second.v()) / (1 << first.k));
+        return Double::from_raw((static_cast<double>(first.v()) * second.v()) /
+                                (1 << first.k));
     }
 
     template<is_number_class Other>
-    constexpr auto operator/(Other a) {
+    constexpr Double operator/(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            if constexpr (abs(second.v() / (1 << k)) <= 1e-7) {
-                return Double::from_raw(((double) first.v() * (1 << first.k)) /
-                                        second.v());
-            } else {
-                return Double::from_raw((double) first.v() /
-                                        (second.v() / (1 << first.k)));
-            }
+        if (abs(second.v() / (1 << k)) <= 1e-7) {
+            return Double::from_raw(((double) first.v() * (1 << first.k)) /
+                                    second.v());
         } else {
-            if (abs(second.v() / (1 << k)) <= 1e-7) {
-                return Other::from_raw(((double) first.v() / (1 << first.k)) /
-                                       second.v());
-            } else {
-                return Other::from_raw((double) first.v() /
-                                       (second.v() / (1 << first.k)));
-            }
+            return Double::from_raw((double) first.v() /
+                                    (second.v() / (1 << first.k)));
         }
+    }
+
+    template<is_number_class Other>
+    Double constexpr &operator+=(Other a) {
+        *this = *this + a;
+        return *this;
     }
 
     template<is_number_class Other>
@@ -617,13 +687,24 @@ public:
     template<is_number_class Other>
     constexpr bool operator==(const Other &other) const {
         auto [first, second] = align_values(*this, other);
-        return abs((double) first.v() - other.v()) < 1e-7;
+        return abs(first.v() - (double) other.v()) < 1e-8;
     }
 
     template<is_number_class Other>
-    auto operator<=>(const Other &other) const {
+    auto operator<(const Other &other) const {
         auto [first, second] = align_values(*this, other);
-        return first.v() <=> other.v();
+        return first.v() < second.v();
+    }
+
+    template<is_number_class Other>
+    auto operator>(const Other &other) const {
+        auto [first, second] = align_values(*this, other);
+        return first.v() > second.v();
+    }
+
+    template<is_number_class Other>
+    auto operator<=(const Other &other) const {
+        return (*this < other || *this == other);
     }
 };
 
@@ -633,8 +714,19 @@ public:
     static constexpr int k = 0;
     float v_float;
 
-    Float(float d) : v_float(d) {
+    constexpr static auto get_name() {
+        std::array<char, 17> res{};
+        res[0] = 'F';
+        res[1] = 'L';
+        res[2] = 'O';
+        res[3] = 'A';
+        res[4] = 'T';
+        return res;
     }
+
+    Float(double d) : v_float(static_cast<float>(d)) {
+    }
+
 
     Float(int i) : v_float(static_cast<float>(i)) {
     }
@@ -650,69 +742,52 @@ public:
     Float() : v_float(0) {
     }
 
-    template<typename Other>
+    template<is_number_class Other>
     constexpr Float(Other other) {
         this->v_float =
-                static_cast<float>(other.v()) / static_cast<float>(1 << Other::k);
+                other.v() / static_cast<float>(1 << other.k);
     }
 
     template<is_number_class Other>
     constexpr auto operator+(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            return Float::from_raw(first.v() + second.v());
-        } else {
-            return Other::from_raw(first.v() + second.v());
-        }
+        return Float::from_raw(first.v() + second.v());
     }
 
     template<is_number_class Other>
     constexpr auto operator-(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            return Float::from_raw(first.v() - second.v());
-        } else {
-            return Other::from_raw(first.v() - second.v());
-        }
+        return Float::from_raw(first.v() - second.v());
     }
 
     template<is_number_class Other>
     constexpr auto operator*(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            if (second.v() / (1 << first.k) != 0) {
-                return Float::from_raw((int64_t) first.v() *
-                                       (second.v() / (1 << first.k)));
-            }
-            return Float::from_raw((static_cast<float>(first.v()) * second.v()) /
-                                   (1 << first.k));
-        }
         if (second.v() / (1 << first.k) != 0) {
-            return Other::from_raw((float) first.v() * (second.v() / (1 << first.k)));
+            return Float::from_raw(static_cast<float>(first.v()) *
+                                   (static_cast<float>(second.v()) / (1 << first.k)));
         }
-        return Other::from_raw(((float) first.v() * second.v()) / (1 << first.k));
+        return Float::from_raw((static_cast<float>(first.v()) * second.v()) /
+                               (1 << first.k));
     }
 
     template<is_number_class Other>
     constexpr auto operator/(Other a) {
         auto [first, second] = align_values(*this, a);
-        if (n > Other::n) {
-            if constexpr (abs(second.v() / (1 << k)) <= 1e-7) {
-                return Float::from_raw(((float) first.v() * (1 << first.k)) /
-                                       second.v());
-            } else {
-                return Float::from_raw((float) first.v() /
-                                       (second.v() / (1 << first.k)));
-            }
+
+        if (abs(second.v() / (1 << k)) <= 1e-7) {
+            return Float::from_raw((static_cast<float>(first.v()) * (1 << first.k)) /
+                                   second.v());
         } else {
-            if (abs(second.v() / (1 << k)) <= 1e-7) {
-                return Other::from_raw(((float) first.v() / (1 << first.k)) /
-                                       second.v());
-            } else {
-                return Other::from_raw((float) first.v() /
-                                       (second.v() / (1 << first.k)));
-            }
+            return Float::from_raw((float) first.v() /
+                                   (second.v() / (1 << first.k)));
         }
+    }
+
+    template<is_number_class Other>
+    Float constexpr &operator+=(Other a) {
+        *this = *this + a;
+        return *this;
     }
 
     template<is_number_class Other>
@@ -740,7 +815,7 @@ public:
     template<is_number_class Other>
     constexpr bool operator==(const Other &other) const {
         auto [first, second] = align_values(*this, other);
-        return abs((float) first.v() - other.v()) < 1e-7;
+        return abs(first.v() - static_cast<float>(other.v())) < 1e-7;
     }
 
     template<is_number_class Other>
