@@ -34,7 +34,7 @@ class Simulation {
             for (auto [dx, dy]: deltas) {
                 int nx = x + dx, ny = y + dy;
                 if (field[nx][ny] != '#' && last_use[nx][ny] < UT - 1 &&
-                    velocity.get(x, y, dx, dy, deltas) > v_type::from_raw(0)) {
+                    velocity.get(x, y, dx, dy) > v_type::from_raw(0)) {
                     stop = false;
                     break;
                 }
@@ -47,7 +47,7 @@ class Simulation {
         for (auto [dx, dy]: deltas) {
             int nx = x + dx, ny = y + dy;
             if (field[nx][ny] == '#' || last_use[nx][ny] == UT ||
-                velocity.get(x, y, dx, dy, deltas) > v_type::from_raw(0)) {
+                velocity.get(x, y, dx, dy) > v_type::from_raw(0)) {
                 continue;
             }
             propagate_stop(nx, ny);
@@ -62,7 +62,7 @@ class Simulation {
             if (field[nx][ny] == '#' || last_use[nx][ny] == UT) {
                 continue;
             }
-            auto v = velocity.get(x, y, dx, dy, deltas);
+            auto v = velocity.get(x, y, dx, dy);
             if (v < v_type(0)) {
                 continue;
             }
@@ -96,7 +96,7 @@ class Simulation {
                     tres[i] = sum;
                     continue;
                 }
-                auto v = velocity.get(x, y, dx, dy, deltas);
+                auto v = velocity.get(x, y, dx, dy);
                 if (v < v_type::from_raw(0)) {
                     tres[i] = sum;
                     continue;
@@ -115,7 +115,7 @@ class Simulation {
             auto [dx, dy] = deltas[d];
             nx = x + dx;
             ny = y + dy;
-            assert(velocity.get(x, y, dx, dy, deltas) > v_type(0) && field[nx][ny] != '#' &&
+            assert(velocity.get(x, y, dx, dy) > v_type(0) && field[nx][ny] != '#' &&
                 last_use[nx][ny] < UT);
 
             ret = (last_use[nx][ny] == UT - 1 || propagate_move(nx, ny, false));
@@ -124,7 +124,7 @@ class Simulation {
         for (auto [dx, dy]: deltas) {
             nx = x + dx, ny = y + dy;
             if (field[nx][ny] != '#' && last_use[nx][ny] < UT - 1 &&
-                velocity.get(x, y, dx, dy, deltas) < v_type::from_raw(0)) {
+                velocity.get(x, y, dx, dy) < v_type::from_raw(0)) {
                 propagate_stop(nx, ny);
             }
         }
@@ -134,6 +134,7 @@ class Simulation {
                 v[1] = 0;
                 v[2] = 0;
                 v[3] = 0;
+                cur_p = 0;
                 swap_with(x, y);
                 swap_with(nx, ny);
                 swap_with(x, y);
@@ -191,7 +192,7 @@ public:
                     if (field[x][y] == '#')
                         continue;
                     if (field[x + 1][y] != '#') {
-                        velocity.add(x, y, 1, 0, g, deltas);
+                        velocity.add(x, y, 1, 0, g);
                     }
                 }
             }
@@ -211,14 +212,14 @@ public:
                         if (field[nx][ny] != '#' && old_p[nx][ny] < old_p[x][y]) {
                             auto delta_p = old_p[x][y] - old_p[nx][ny];
                             auto force = delta_p;
-                            auto &contr = velocity.get(nx, ny, -dx, -dy, deltas);
+                            auto &contr = velocity.get(nx, ny, -dx, -dy);
                             if (contr * rho[static_cast<int>(field[nx][ny])] >= force) {
                                 contr -= force / rho[static_cast<int>(field[nx][ny])];
                                 continue;
                             }
                             force -= contr * rho[static_cast<int>(field[nx][ny])];
                             contr = 0;
-                            velocity.add(x, y, dx, dy, force / rho[static_cast<int>(field[x][y])], deltas);
+                            velocity.add(x, y, dx, dy, force / rho[static_cast<int>(field[x][y])]);
                             p[x][y] -= force / p_type(dirs[x][y]);
                             total_delta_p -= force / p_type(dirs[x][y]);
                         }
@@ -252,11 +253,11 @@ public:
                     if (field[x][y] == '#')
                         continue;
                     for (auto [dx, dy]: deltas) {
-                        auto old_v = velocity.get(x, y, dx, dy, deltas);
-                        auto new_v = velocity_flow.get(x, y, dx, dy, deltas);
+                        auto old_v = velocity.get(x, y, dx, dy);
+                        auto new_v = velocity_flow.get(x, y, dx, dy);
                         if (old_v > v_type::from_raw(0)) {
                             assert(new_v <= old_v);
-                            velocity.get(x, y, dx, dy, deltas) = new_v;
+                            velocity.get(x, y, dx, dy) = new_v;
                             auto force = (old_v - new_v) * rho[static_cast<int>(field[x][y])];
                             if (field[x][y] == '.')
                                 force *= p_type(0.8);

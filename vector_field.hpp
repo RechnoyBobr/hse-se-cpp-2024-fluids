@@ -2,6 +2,7 @@
 
 #include <bits/stdc++.h>
 #include "fixed.hpp"
+
 using namespace std;
 
 template<typename T, typename T1>
@@ -9,7 +10,6 @@ T amin(T &a, T1 b) {
     if (b < a)a = b;
     return a;
 }
-
 
 
 template<typename v_t, int P, int K, int N, int M>
@@ -27,15 +27,16 @@ public:
         }
     }
 
-    v_t &add(int x, int y, int dx, int dy, v_t dv, auto &deltas) {
+    v_t &add(int x, int y, int dx, int dy, v_t dv) {
         if (x == 21 && y == 64) {
             // std::cout << "Bug located\n";
         }
-        return get(x, y, dx, dy, deltas) += dv;
+        return get(x, y, dx, dy) += dv;
     }
 
-    v_t &get(int x, int y, int dx, int dy, auto deltas) {
-        size_t i = ranges::find(deltas, pair(dx, dy)) - deltas.begin();
+    v_t &get(int x, int y, int dx, int dy) {
+        size_t i = (((dx & 1) ^ ((dx & 2) >> 1)) | (((dy & 1) ^ ((dy & 2) >> 1)) | ((dy & 1) << 1)));
+        assert(i < 4 && i >= 0);
         return v[x][y][i];
     }
 
@@ -48,8 +49,8 @@ public:
         for (auto [dx, dy]: deltas) {
             int nx = x + dx, ny = y + dy;
             if (field[nx][ny] != '#' && last_use[nx][ny] < UT) {
-                auto cap = velocity.get(x, y, dx, dy, deltas);
-                auto flow = velocity_flow.get(x, y, dx, dy, deltas);
+                auto cap = velocity.get(x, y, dx, dy);
+                auto flow = velocity_flow.get(x, y, dx, dy);
                 if (flow == cap) {
                     continue;
                 }
@@ -61,7 +62,7 @@ public:
                     vp = cap - flow;
                 }
                 if (last_use[nx][ny] == UT - 1) {
-                    velocity_flow.add(x, y, dx, dy, vp, deltas);
+                    velocity_flow.add(x, y, dx, dy, vp);
                     last_use[x][y] = UT;
                     // cerr << x << " " << y << " -> " << nx << " " << ny << " " << vp
                     // << / " << lim << "\n";
@@ -73,7 +74,7 @@ public:
                     if (x == 24 && y == 63 && dx == -1 && dy == 0) {
                         // std::cout << "There is a bug!\n";
                     }
-                    velocity_flow.add(x, y, dx, dy, t, deltas);
+                    velocity_flow.add(x, y, dx, dy, t);
                     last_use[x][y] = UT;
                     // cerr << x << " " << y << " -> " << nx << " " << ny << " " << t <<
                     // " << lim << "\n";
