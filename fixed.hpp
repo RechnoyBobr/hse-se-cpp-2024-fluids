@@ -19,19 +19,14 @@ concept is_number_class =
 
 template<is_number_class First, is_number_class Second>
 constexpr static auto align_values(First f, Second s) {
-    if constexpr (std::is_same_v<First, Second>) {
-        return std::make_tuple<First, First>(First::from_raw(f.v()), First::from_raw(s.v()));
-    }
+    First first = First::from_raw(f.v());
+    First second;
     if constexpr (First::k > Second::k) {
-        return std::make_tuple<First, First>(
-            First::from_raw(f.v()),
-            First::from_raw(static_cast<int64_t>(s.v()) << (First::k - Second::k)));
+        second = First::from_raw(static_cast<int64_t>(s.v()) << (First::k - Second::k));
+    } else {
+        second = First::from_raw(static_cast<int64_t>(s.v()) >> (Second::k - First::k));
     }
-    if constexpr (First::k <= Second::k) {
-        return std::make_tuple<First, First>(
-            First::from_raw(f.v()),
-            First::from_raw(static_cast<int64_t>(s.v()) >> (Second::k - First::k)));
-    }
+    return std::make_tuple(first, second);
 }
 
 using namespace std;
@@ -193,8 +188,8 @@ public:
         }
     }
 
-    static constexpr Fast_Fixed<N, K> from_raw(int_fast64_t x) {
-        Fast_Fixed<N, K> ret;
+    static constexpr Fast_Fixed from_raw(int_fast64_t x) {
+        Fast_Fixed ret;
         if constexpr (N <= 8) {
             ret.v8 = static_cast<int_fast8_t>(x);
             ret.sz = 8;
@@ -279,13 +274,14 @@ public:
         return this;
     }
 
-    constexpr Fast_Fixed<N, K> operator-() {
-        return Fast_Fixed<N, K>::from_raw(-this->v());
+    constexpr Fast_Fixed operator-() {
+        return Fast_Fixed::from_raw(-this->v());
     }
 
-    constexpr bool operator==(const Fast_Fixed &other) const {
+    template<is_number_class Other>
+    constexpr bool operator==(const Other &other) const {
         auto [first, second] = align_values(*this, other);
-        return first.v() == second.v();
+        return first.v() == other.v();
     }
 
     template<is_number_class Other>
@@ -376,7 +372,7 @@ public:
         } else {
             static_assert(false, "Size of Fixed class is wrong");
         }
-        switch (sz) {
+        switch (N) {
             case 8: {
                 v8 = other.v();
                 break;
@@ -392,6 +388,9 @@ public:
             case 64: {
                 v64 = other.v();
                 break;
+            }
+            default: {
+                assert(false);
             }
         }
     }
@@ -467,18 +466,20 @@ public:
 
     static constexpr Fixed from_raw(int64_t x) {
         Fixed ret;
-        if (N == 8) {
+        if constexpr (N == 8) {
             ret.sz = 8;
             ret.v8 = static_cast<int8_t>(x);
-        } else if (N == 16) {
+        } else if constexpr (N == 16) {
             ret.v16 = static_cast<int16_t>(x);
             ret.sz = 16;
-        } else if (N == 32) {
+        } else if constexpr (N == 32) {
             ret.v32 = static_cast<int32_t>(x);
             ret.sz = 32;
-        } else if (N == 64) {
+        } else if constexpr (N == 64) {
             ret.v64 = x;
             ret.sz = 64;
+        } else {
+            static_assert(false, "No such size N exists to instantiate Fixed class from raw");
         }
         return ret;
     }
@@ -522,10 +523,10 @@ public:
     constexpr Fixed<N, K> operator/(Other a) {
         auto [first, second] = align_values(*this, a);
         if (second.v() / (1 << K) == 0) {
-            return Fixed<N, K>::from_raw(((int64_t) first.v() << first.k) /
+            return Fixed<N, K>::from_raw((static_cast<int64_t>(first.v()) << first.k) /
                                          second.v());
         }
-        return Fixed<N, K>::from_raw((int64_t) first.v() /
+        return Fixed<N, K>::from_raw(static_cast<int64_t>(first.v()) /
                                      (second.v() >> first.k));
     }
 
@@ -553,8 +554,8 @@ public:
         return *this;
     }
 
-    std::ostream &operator<<(std::ostream &out) {
-        return out << this->v() / (double) (1 << K);
+    std::ostream &operator<<(std::ostream &out) const {
+        return out << this->v() / static_cast<double>(1 << K);
     }
 
     template<is_number_class Other>
@@ -637,7 +638,7 @@ public:
     constexpr auto operator*(Other a) {
         auto [first, second] = align_values(*this, a);
         if (second.v() / (1 << first.k) != 0) {
-            return Double::from_raw((int64_t) first.v() *
+            return Double::from_raw(static_cast<int64_t>(first.v()) *
                                     (second.v() / (1 << first.k)));
         }
         return Double::from_raw((static_cast<double>(first.v()) * second.v()) /
@@ -648,10 +649,10 @@ public:
     constexpr Double operator/(Other a) {
         auto [first, second] = align_values(*this, a);
         if (abs(second.v() / (1 << k)) <= 1e-7) {
-            return Double::from_raw(((double) first.v() * (1 << first.k)) /
+            return Double::from_raw((static_cast<double>(first.v()) * (1 << first.k)) /
                                     second.v());
         } else {
-            return Double::from_raw((double) first.v() /
+            return Double::from_raw(static_cast<double>(first.v()) /
                                     (second.v() / (1 << first.k)));
         }
     }
@@ -687,7 +688,7 @@ public:
     template<is_number_class Other>
     constexpr bool operator==(const Other &other) const {
         auto [first, second] = align_values(*this, other);
-        return abs(first.v() - (double) other.v()) < 1e-8;
+        return abs(first.v() - static_cast<double>(other.v())) < 1e-8;
     }
 
     template<is_number_class Other>
@@ -779,7 +780,7 @@ public:
             return Float::from_raw((static_cast<float>(first.v()) * (1 << first.k)) /
                                    second.v());
         } else {
-            return Float::from_raw((float) first.v() /
+            return Float::from_raw(static_cast<float>(first.v()) /
                                    (second.v() / (1 << first.k)));
         }
     }

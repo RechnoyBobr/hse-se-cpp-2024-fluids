@@ -10,7 +10,8 @@
 
 inline mt19937 rnd{1337};
 inline uniform_real_distribution<> r{0.0, 1.0};
-
+inline int cnt = 0;
+inline int subcnt = 0;
 
 template<class p_type, class v_type, class v_flow, int N, int M>
 class Simulation {
@@ -146,7 +147,12 @@ class Simulation {
     VectorField<v_type, v_type::n, v_type::k, N, M> velocity;
     VectorField<v_flow, v_flow::n, v_flow::k, N, M> velocity_flow;
 
-    v_type random01() { return v_type(r(rnd)); }
+    v_type random01() {
+        if constexpr (is_same_v<v_type, Double> || is_same_v<v_type, Float>) {
+            return v_type::from_raw(static_cast<double>(rnd()) / INT_MAX);
+        }
+        return v_type::from_raw((rnd() & ((1 << v_type::k) - 1)));
+    }
 
 public:
     char field[N][M + 1]{};
@@ -184,8 +190,9 @@ public:
                 for (size_t y = 0; y < M; ++y) {
                     if (field[x][y] == '#')
                         continue;
-                    if (field[x + 1][y] != '#')
+                    if (field[x + 1][y] != '#') {
                         velocity.add(x, y, 1, 0, g, deltas);
+                    }
                 }
             }
 
@@ -205,14 +212,13 @@ public:
                             auto delta_p = old_p[x][y] - old_p[nx][ny];
                             auto force = delta_p;
                             auto &contr = velocity.get(nx, ny, -dx, -dy, deltas);
-                            if (contr * rho[(int) field[nx][ny]] >= force) {
-                                contr -= force / rho[(int) field[nx][ny]];
+                            if (contr * rho[static_cast<int>(field[nx][ny])] >= force) {
+                                contr -= force / rho[static_cast<int>(field[nx][ny])];
                                 continue;
                             }
-                            force -= contr * rho[(int) field[nx][ny]];
+                            force -= contr * rho[static_cast<int>(field[nx][ny])];
                             contr = 0;
-
-                            velocity.add(x, y, dx, dy, force / rho[(int) field[x][y]], deltas);
+                            velocity.add(x, y, dx, dy, force / rho[static_cast<int>(field[x][y])], deltas);
                             p[x][y] -= force / p_type(dirs[x][y]);
                             total_delta_p -= force / p_type(dirs[x][y]);
                         }
@@ -229,12 +235,6 @@ public:
                 for (size_t x = 0; x < N; ++x) {
                     for (size_t y = 0; y < M; ++y) {
                         if (field[x][y] != '#' && last_use[x][y] != UT) {
-                            // BUG: there is bug with params p_type<64,16>, v_type<32,10>, v_flow_type<32,10>
-                            // In 4 iteration on x = 21 and y = 64 there is a bug with t equals to large negative number
-                            if (x == 21 && y == 64 && i == 4) {
-                                // std::cout << "Found the bug!\n";
-                            }
-
                             auto [t, local_prop, _] =
                                     VectorField<v_flow, v_flow::n, v_flow::k, N, M>::propagate_flow(
                                         x, y, v_flow(1), last_use, UT, velocity, velocity_flow, deltas, field);
@@ -254,16 +254,10 @@ public:
                     for (auto [dx, dy]: deltas) {
                         auto old_v = velocity.get(x, y, dx, dy, deltas);
                         auto new_v = velocity_flow.get(x, y, dx, dy, deltas);
-                        if (new_v.v() > 1000000) {
-                            // std::cout << i << " " << x << " " << y << " " << new_v.v() << "\n";
-                        }
                         if (old_v > v_type::from_raw(0)) {
-                            if (new_v > old_v) {
-                                // cout << "Error";
-                            }
                             assert(new_v <= old_v);
                             velocity.get(x, y, dx, dy, deltas) = new_v;
-                            auto force = (old_v - new_v) * rho[(int) field[x][y]];
+                            auto force = (old_v - new_v) * rho[static_cast<int>(field[x][y])];
                             if (field[x][y] == '.')
                                 force *= p_type(0.8);
                             if (field[x + dx][y + dy] == '#') {
@@ -279,11 +273,13 @@ public:
             }
 
             UT += 2;
+
             prop = false;
             for (size_t x = 0; x < N; ++x) {
                 for (size_t y = 0; y < M; ++y) {
                     if (field[x][y] != '#' && last_use[x][y] != UT) {
-                        if (random01() < move_prob(x, y)) {
+                        auto f = random01();
+                        if (f < move_prob(x, y)) {
                             prop = true;
                             propagate_move(x, y, true);
                         } else {

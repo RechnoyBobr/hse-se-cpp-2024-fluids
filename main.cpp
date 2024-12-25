@@ -12,15 +12,22 @@ constexpr void run_asserts() {
     assert((res2.v() >> 14) == 1680);
     auto res = x + y;
     auto res1 = x - y;
+    Fixed<32, 16> f(10);
+    f += x;
+    assert((f.v() >> 16) == 130);
     assert((res1.v() >> 14) == 106);
     assert((res.v() >> 14) == 134);
     Fast_Fixed<32, 14> a(10);
+    Fixed<64, 14> t(10);
+    assert(t == a);
+    Fixed<32, 10> tmp(0);
+    assert(t - a == tmp);
     Fixed<64, 10> b(16);
     assert((a + b).v() >> 14 == 26);
 }
 
 
-auto &get_sim(vector<string_view> &m) {
+auto &get_sim(const vector<string_view> &m) {
     for (size_t i = 0; i < sims.size(); i++) {
         int flag = 1;
         for (size_t j = 0; j < 3; j++) {
@@ -51,9 +58,9 @@ int main(int argc, char *argv[]) {
     string_view v_flow_type_raw_str;
     int c;
     struct option long_options[] = {
-        {"p_type", required_argument, 0, 'p'},
-        {"v_type", required_argument, 0, 'v'},
-        {"v_flow_type", required_argument, 0, 'f'}
+        {"p_type", required_argument, nullptr, 'p'},
+        {"v_type", required_argument, nullptr, 'v'},
+        {"v_flow_type", required_argument, nullptr, 'f'}
     };
     int opt_idx = 0;
     while ((c = getopt_long(argc, argv, "pvf:", long_options, &opt_idx)) != -1) {
@@ -82,12 +89,13 @@ int main(int argc, char *argv[]) {
         ifstream in = ifstream("./input.txt");
         double empty_rho, fluid_rho, g_double;
         in >> empty_rho >> fluid_rho >> g_double;
-        int n = 36, m = 84;
+        int n = 36;
         sim.rho[' '] = empty_rho;
         sim.rho['.'] = fluid_rho;
         in.get();
         sim.g = g_double;
         for (int i = 0; i < n; i++) {
+            int m = 84;
             in.getline(sim.field[i], m + 1);
         }
         in.close();

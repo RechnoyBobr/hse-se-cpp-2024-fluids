@@ -5,6 +5,7 @@
 
 #define ERROR_TYPES_MACRO \
 static_assert(false,"You should specify available types through compile flag -DTYPES");
+
 #ifdef TYPES
 #define FIXED(N,K) Fixed<N,K>
 #define FAST_FIXED(N,K) Fast_Fixed<N,K>
@@ -14,20 +15,11 @@ static_assert(false,"You should specify available types through compile flag -DT
 #ifdef SIZES
 // Deal with size choosing
 #endif
+
 template<typename... ts>
 struct Type_List {
 };
-
-template<typename T>
-struct TypeListSize;
-
-template<typename... Ts>
-struct TypeListSize<Type_List<Ts...> > {
-    static constexpr size_t value = sizeof...(Ts);
-};
-
 typedef Type_List<TYPES > AllTypes;
-
 
 template<typename F, typename S, typename T>
 struct triplet {
@@ -65,13 +57,12 @@ struct cartesian_product_impl;
 template<typename... Fs, typename... Ss, typename... Ts>
 struct cartesian_product_impl<Type_List<Fs...>, Type_List<Ss...>, Type_List<Ts...> > {
 private:
-    // Создает комбинации для одного F с одним S и всеми T
     template<typename CurrentF, typename CurrentS>
     struct make_combinations_with_t {
         using type = Type_List<std::tuple<CurrentF, CurrentS, Ts>...>;
     };
 
-    // Создает комбинации для одного F со всеми S
+
     template<typename CurrentF>
     struct make_combinations_with_s {
         template<typename... CurrentSs>
@@ -90,7 +81,6 @@ private:
         using type = typename helper<Ss...>::type;
     };
 
-    // Объединяет все комбинации для всех F
     template<typename... Args>
     struct combine_all {
         using type = Type_List<>;

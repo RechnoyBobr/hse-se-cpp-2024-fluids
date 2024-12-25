@@ -4,7 +4,13 @@
 #include "fixed.hpp"
 using namespace std;
 
-template<typename T,typename T1>T amin(T &a,T1 b){if(b<a)a=b;return a;}
+template<typename T, typename T1>
+T amin(T &a, T1 b) {
+    if (b < a)a = b;
+    return a;
+}
+
+
 
 template<typename v_t, int P, int K, int N, int M>
 class VectorField {
@@ -30,16 +36,15 @@ public:
 
     v_t &get(int x, int y, int dx, int dy, auto deltas) {
         size_t i = ranges::find(deltas, pair(dx, dy)) - deltas.begin();
-
-        assert(i < deltas.size());
         return v[x][y][i];
     }
 
     static tuple<v_t, bool, pair<int, int> > propagate_flow(int x, int y,
-                                                            v_t lim, auto &last_use, int UT, auto &velocity,
+                                                            v_t lim, auto &last_use, int &UT, auto &velocity,
                                                             auto &velocity_flow, auto &deltas, auto &field) {
         last_use[x][y] = UT - 1;
         v_t ret = 0;
+
         for (auto [dx, dy]: deltas) {
             int nx = x + dx, ny = y + dy;
             if (field[nx][ny] != '#' && last_use[nx][ny] < UT) {
@@ -52,13 +57,10 @@ public:
                 v_t vp;
                 if (lim < cap - flow) {
                     vp = lim;
-                }else {
+                } else {
                     vp = cap - flow;
                 }
                 if (last_use[nx][ny] == UT - 1) {
-                    if (x == 24 && y == 63 && dx == -1 && dy == 0) {
-                        std::cout << "There is a bug!\n";
-                    }
                     velocity_flow.add(x, y, dx, dy, vp, deltas);
                     last_use[x][y] = UT;
                     // cerr << x << " " << y << " -> " << nx << " " << ny << " " << vp
